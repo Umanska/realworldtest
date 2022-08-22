@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="FullRegressionSuite" parallel="methods" thread-count="3" >
+    <test name="SignUpTest" >
+        <classes>
+            <class name="api.signup.SignUpTest" />
+        </classes>
+    </test>
+    <test name="SignInTest" >
+        <classes>
+            <class name="api.signup.SignInTest" />
+        </classes>
+    </test>
+    <test name="UpdateUserTest" >
+        <classes>
+            <class name="api.signup.UpdateUserPositiveTest" />
+        </classes>
+    </test>
+</suite>
