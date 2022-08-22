@@ -6,14 +6,12 @@ import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseUtil;
+import org.realworld.utils.ResponseHandler;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-
-import java.io.IOException;
 
 import static org.realworld.api.Constants.*;
 
@@ -29,12 +27,11 @@ public class SignUpTest {
     }
 
     @Test
-    public void SignUpUserWithValidData() throws IOException {
+    public void SignUpUserWithValidData() {
         String userName = getUniqueUserName();
         newValidUser = new NewUserRequest(
                 generateNewUser(userName, userName + EMAIL_SUFFIX, PASSWORD));
-        ResponseWrapper<UserResponse> parsedResponse = ResponseUtil.getParsedResponse(
-                apiService.signUpUser(newValidUser).execute());
+        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(apiService.signUpUser(newValidUser));
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         softAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), newValidUser.getUser().getUsername());
@@ -44,12 +41,9 @@ public class SignUpTest {
 
 
     @Test(dataProvider = "emptyFieldCases", dependsOnMethods = "SignUpUserWithValidData")
-    public void SignUpUserWithEmptyRequiredField(
-            String username, String email,
-            String password, String errorMessage) throws IOException {
+    public void SignUpUserWithEmptyRequiredField(String username, String email, String password, String errorMessage) {
         NewUserRequest userRequest = new NewUserRequest(generateNewUser(username, email, password));
-        ResponseWrapper<String> parsedResponse = ResponseUtil.getParsedErrorResponse(
-                apiService.signUpUser(userRequest).execute());
+        ResponseWrapper<String> parsedResponse = ResponseHandler.executeAndGetParsedErrorResponse(apiService.signUpUser(userRequest));
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 422);
         softAssert.assertEquals(parsedResponse.getResponseBody(), errorMessage);

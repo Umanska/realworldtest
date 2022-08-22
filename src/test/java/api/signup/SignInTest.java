@@ -5,13 +5,11 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseUtil;
+import org.realworld.utils.ResponseHandler;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
 
@@ -25,20 +23,18 @@ public class SignInTest {
     }
 
     @Test
-    public void loginWithValidEmailPassword() throws IOException {
+    public void loginWithValidEmailPassword() {
         String userEmail = "qa2@gmail.com";
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, "12345"));
-        ResponseWrapper<UserResponse> parsedResponse = ResponseUtil.getParsedResponse(
-                apiService.loginUser(userForSignIn).execute());
+        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(apiService.loginUser(userForSignIn));
         assertEquals(parsedResponse.getStatusCode(), 200);
         assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
     }
 
     @Test(dataProvider = "negativeCases")
-    public void loginNegativeCases(String userEmail, String userPassword, String expectedErrorMessage) throws IOException {
+    public void loginNegativeCases(String userEmail, String userPassword, String expectedErrorMessage) {
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, userPassword));
-        ResponseWrapper<String> parsedErrorResponse = ResponseUtil.getParsedErrorResponse(
-                apiService.loginUser(userForSignIn).execute());
+        ResponseWrapper<String> parsedErrorResponse = ResponseHandler.executeAndGetParsedErrorResponse(apiService.loginUser(userForSignIn));
         assertEquals(parsedErrorResponse.getStatusCode(), 422);
         assertEquals(parsedErrorResponse.getResponseBody(), expectedErrorMessage);
     }
