@@ -5,7 +5,7 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseHandler;
+import org.realworld.utils.ResponseUtils;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -18,7 +18,7 @@ public class SignInTest {
     private ApiService apiService;
 
     @BeforeClass
-    public void SetUp() {
+    public void setUp() {
         apiService = RetrofitFactory.getInstance().createService(ApiService.class);
     }
 
@@ -26,7 +26,7 @@ public class SignInTest {
     public void loginWithValidEmailPassword() {
         String userEmail = "qa2@gmail.com";
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, "12345"));
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(apiService.loginUser(userForSignIn));
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.loginUser(userForSignIn));
         assertEquals(parsedResponse.getStatusCode(), 200);
         assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
     }
@@ -34,7 +34,7 @@ public class SignInTest {
     @Test(dataProvider = "negativeCases")
     public void loginNegativeCases(String userEmail, String userPassword, String expectedErrorMessage) {
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, userPassword));
-        ResponseWrapper<String> parsedErrorResponse = ResponseHandler.executeAndGetParsedErrorResponse(apiService.loginUser(userForSignIn));
+        ResponseWrapper<String> parsedErrorResponse = ResponseUtils.executeAndParseError(apiService.loginUser(userForSignIn));
         assertEquals(parsedErrorResponse.getStatusCode(), 422);
         assertEquals(parsedErrorResponse.getResponseBody(), expectedErrorMessage);
     }

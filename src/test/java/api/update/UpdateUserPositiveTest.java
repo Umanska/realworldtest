@@ -1,12 +1,14 @@
-package api.signup;
+package api.update;
 
+import org.apache.commons.lang3.StringUtils;
 import org.realworld.api.Session;
 import org.realworld.api.datamodel.requests.UpdateUser;
 import org.realworld.api.datamodel.requests.UpdateUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseHandler;
+import org.realworld.services.AuthenticationService;
+import org.realworld.utils.ResponseUtils;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -21,19 +23,19 @@ public class UpdateUserPositiveTest {
     private ApiService authorizedApiService;
 
     @BeforeMethod(alwaysRun = true)
-    public void SignIn() {
+    public void signIn() {
         String userName = USER_NAME_PREFIX + System.nanoTime();
         ApiService apiService = RetrofitFactory.getInstance().createService(ApiService.class);
-        Session session = new Session().createSessionWithEmail(userName + EMAIL_SUFFIX, apiService);
+        Session session = new AuthenticationService(apiService).createSessionWithEmail(userName + EMAIL_SUFFIX);
         authorizedApiService = RetrofitFactory.getInstance().createAuthorizedService(ApiService.class, session.getToken());
     }
 
     @Test(dataProvider = "email")
-    public void UpdateUserEmailFields(String updatedEmail) {
+    public void updateUserEmailFields(String updatedEmail) {
         UpdateUser updateUser = new UpdateUser.Builder()
                 .email(updatedEmail)
                 .build();
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
         SoftAssert sAssert = new SoftAssert();
@@ -43,11 +45,11 @@ public class UpdateUserPositiveTest {
     }
 
     @Test(dataProvider = "username")
-    public void UpdateUserUsernameFields(String updatedUsername) {
+    public void updateUserUsernameFields(String updatedUsername) {
         UpdateUser updateUser = new UpdateUser.Builder()
                 .username(updatedUsername)
                 .build();
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
         SoftAssert sAssert = new SoftAssert();
@@ -57,11 +59,11 @@ public class UpdateUserPositiveTest {
     }
 
     @Test(dataProvider = "image")
-    public void UpdateUserOptionalImageFields(String updatedImage) {
+    public void updateUserOptionalImageFields(String updatedImage) {
         UpdateUser updateUser = new UpdateUser.Builder()
                 .image(updatedImage)
                 .build();
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
         SoftAssert sAssert = new SoftAssert();
@@ -71,11 +73,11 @@ public class UpdateUserPositiveTest {
     }
 
     @Test(dataProvider = "bio")
-    public void UpdateUserOptionalBioFields(String updatedBio) {
+    public void updateUserOptionalBioFields(String updatedBio) {
         UpdateUser updateUser = new UpdateUser.Builder()
                 .bio(updatedBio)
                 .build();
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
         SoftAssert sAssert = new SoftAssert();
@@ -85,21 +87,47 @@ public class UpdateUserPositiveTest {
     }
 
     @Test
-    public void UpdateUsernameFieldTwice() {
+    public void updateUsernameFieldTwice() {
         //TODO add json schema assert
         String updatedUsername = USER_NAME_PREFIX + System.nanoTime() + System.currentTimeMillis();
         UpdateUser updateUser = new UpdateUser.Builder()
                 .username(updatedUsername)
                 .build();
-        ResponseHandler.executeAndGetParsedResponse(
+        ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
                 authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
 
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
+        sAssert.assertAll();
+    }
+
+    @Test
+    public void updateAllFields() {
+        String updatedUsername = USER_NAME_PREFIX + System.nanoTime() + System.currentTimeMillis();
+        String updatedImage = "https://test.com";
+        String updatedBio = "https://en.wikipedia.org";
+        UpdateUser updateUser = new UpdateUser.Builder()
+                .username(updatedUsername)
+                .email(updatedUsername + EMAIL_SUFFIX)
+                .image(updatedImage)
+                .bio(updatedBio)
+                .build();
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(
+                authorizedApiService.updateUser(new UpdateUserRequest(updateUser)));
+
+        SoftAssert sAssert = new SoftAssert();
+        sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), updatedUsername + EMAIL_SUFFIX);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getImage(), updatedImage);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getBio(), updatedBio);
+        sAssert.assertTrue(parsedResponse.getResponseBody().getUser().getToken() != null ||
+                !StringUtils.equals(parsedResponse.getResponseBody().getUser().getToken(), ""),
+                "Token can not be null or empty");
         sAssert.assertAll();
     }
 

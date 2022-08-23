@@ -6,7 +6,7 @@ import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseHandler;
+import org.realworld.utils.ResponseUtils;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -22,16 +22,16 @@ public class SignUpTest {
     private NewUserRequest newValidUser;
 
     @BeforeClass
-    public void SetUp() {
+    public void setUp() {
         apiService = RetrofitFactory.getInstance().createService(ApiService.class);
     }
 
     @Test
-    public void SignUpUserWithValidData() {
+    public void signUpUserWithValidData() {
         String userName = getUniqueUserName();
         newValidUser = new NewUserRequest(
                 generateNewUser(userName, userName + EMAIL_SUFFIX, PASSWORD));
-        ResponseWrapper<UserResponse> parsedResponse = ResponseHandler.executeAndGetParsedResponse(apiService.signUpUser(newValidUser));
+        ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.signUpUser(newValidUser));
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         softAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), newValidUser.getUser().getUsername());
@@ -40,10 +40,10 @@ public class SignUpTest {
     }
 
 
-    @Test(dataProvider = "emptyFieldCases", dependsOnMethods = "SignUpUserWithValidData")
-    public void SignUpUserWithEmptyRequiredField(String username, String email, String password, String errorMessage) {
+    @Test(dataProvider = "emptyFieldCases", dependsOnMethods = "signUpUserWithValidData")
+    public void signUpUserWithEmptyRequiredField(String username, String email, String password, String errorMessage) {
         NewUserRequest userRequest = new NewUserRequest(generateNewUser(username, email, password));
-        ResponseWrapper<String> parsedResponse = ResponseHandler.executeAndGetParsedErrorResponse(apiService.signUpUser(userRequest));
+        ResponseWrapper<String> parsedResponse = ResponseUtils.executeAndParseError(apiService.signUpUser(userRequest));
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 422);
         softAssert.assertEquals(parsedResponse.getResponseBody(), errorMessage);

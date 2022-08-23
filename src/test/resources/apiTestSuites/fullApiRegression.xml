@@ -13,7 +13,7 @@
     </test>
     <test name="UpdateUserTest" >
         <classes>
-            <class name="api.signup.UpdateUserPositiveTest" />
+            <class name="api.update.UpdateUserPositiveTest" />
         </classes>
     </test>
 </suite>
