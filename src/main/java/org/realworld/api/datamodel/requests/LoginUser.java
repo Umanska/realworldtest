@@ -1,11 +1,15 @@
 package org.realworld.api.datamodel.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import static org.realworld.api.Constants.PASSWORD;
 import static org.realworld.api.Constants.USER_1_EMAIL;
 
 public class LoginUser {
 
+    @JsonProperty
     private String email;
+    @JsonProperty
     private String password;
 
     public LoginUser(String loginEmail, String loginPassword) {
