@@ -3,7 +3,7 @@ package org.realworld.api.datamodel.requests;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import static org.realworld.api.Constants.PASSWORD;
-import static org.realworld.api.Constants.USER_1;
+import static org.realworld.api.Constants.USER_1_EMAIL;
 
 public class LoginUser {
 
@@ -21,7 +21,7 @@ public class LoginUser {
      * Create LoginUser object with default email and password
      */
     public LoginUser() {
-        this(USER_1, PASSWORD);
+        this(USER_1_EMAIL, PASSWORD);
     }
 
     /**

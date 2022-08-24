@@ -1,5 +1,6 @@
 package org.realworld.api;
 
+import org.realworld.api.datamodel.responses.User;
 import org.realworld.api.datamodel.responses.UserResponse;
 
 public class Session {
@@ -8,6 +9,10 @@ public class Session {
 
     public Session(UserResponse user) {
         this.user = user;
+    }
+
+    public User getUser() {
+        return this.user.getUser();
     }
 
     public String getToken() {
