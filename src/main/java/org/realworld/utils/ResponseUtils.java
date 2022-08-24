@@ -1,7 +1,7 @@
 package org.realworld.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,13 +40,14 @@ public class ResponseUtils {
         if (rawResponse.errorBody() == null) {
             return new ResponseWrapper<>(rawResponse.code(), null);
         }
-        Gson gson = new Gson();
-        JsonObject response = gson.fromJson(rawResponse.errorBody().charStream(), JsonObject.class);
-        String errorMessage = response
-                .getAsJsonObject("errors")
-                .getAsJsonArray("body")
-                .get(0).getAsString();
-        return new ResponseWrapper<>(rawResponse.code(), errorMessage);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode responseAsJson = objectMapper.readTree(rawResponse.errorBody().charStream());
+            String errorMessage = responseAsJson.get("errors").get("body").get(0).asText();
+            return new ResponseWrapper<>(rawResponse.code(), errorMessage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static <T> Response<T> execute(Call<T> request) {

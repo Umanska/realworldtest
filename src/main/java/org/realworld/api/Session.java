@@ -7,10 +7,6 @@ public class Session {
 
     private UserResponse user;
 
-    public Session() {
-
-    }
-
     public Session(UserResponse user) {
         this.user = user;
     }
@@ -26,5 +22,4 @@ public class Session {
     public String getEmail() {
         return this.user.getUser().getEmail();
     }
-
 }
