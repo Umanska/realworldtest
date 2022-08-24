@@ -1,11 +1,18 @@
 package org.realworld.api.datamodel.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UpdateUser {
 
+    @JsonProperty
     private String email;
+    @JsonProperty
     private String token;
+    @JsonProperty
     private String username;
+    @JsonProperty
     private String bio;
+    @JsonProperty
     private String image;
 
     public String getToken() {

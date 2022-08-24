@@ -1,9 +1,14 @@
 package org.realworld.api.datamodel.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NewUser {
 
+    @JsonProperty
     private String username;
+    @JsonProperty
     private String email;
+    @JsonProperty
     private String password;
 
 

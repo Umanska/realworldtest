@@ -1,11 +1,18 @@
 package org.realworld.api.datamodel.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class User {
 
+    @JsonProperty
     private String email;
+    @JsonProperty
     private String token;
+    @JsonProperty
     private String username;
+    @JsonProperty
     private String bio;
+    @JsonProperty
     private String image;
 
     public String getToken() {
