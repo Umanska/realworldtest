@@ -3,7 +3,7 @@ package org.realworld.utils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class RetrofitFactory {
 
@@ -44,7 +44,7 @@ public class RetrofitFactory {
     private Retrofit.Builder getRetrofitDefaultBuilder() {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
+                .addConverterFactory(JacksonConverterFactory.create());
     }
 
     private OkHttpClient getDefaultHttpClient() {

@@ -1,7 +1,9 @@
 package org.realworld.api.datamodel.requests;
 
-public class LoginUserRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class LoginUserRequest {
+    @JsonProperty
     private LoginUser user;
 
     public LoginUserRequest(LoginUser user) {
