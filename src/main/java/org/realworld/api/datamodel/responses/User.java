@@ -1,18 +1,21 @@
 package org.realworld.api.datamodel.responses;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class User {
 
-    @JsonProperty
+    @Email
+    @NotBlank
     private String email;
-    @JsonProperty
+    @NotBlank
     private String token;
-    @JsonProperty
+    @NotBlank
     private String username;
-    @JsonProperty
+    @NotNull
     private String bio;
-    @JsonProperty
+    @NotNull
     private String image;
 
     public String getToken() {

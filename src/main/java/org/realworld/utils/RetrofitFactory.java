@@ -1,9 +1,14 @@
 package org.realworld.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+
+import static com.fasterxml.jackson.core.JsonParser.Feature.STRICT_DUPLICATE_DETECTION;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 public class RetrofitFactory {
 
@@ -42,9 +47,14 @@ public class RetrofitFactory {
     }
 
     private Retrofit.Builder getRetrofitDefaultBuilder() {
+        ObjectMapper defaultMapper = new ObjectMapper()
+                .configure(STRICT_DUPLICATE_DETECTION,true)
+                .configure(FAIL_ON_UNKNOWN_PROPERTIES,true)
+                .configure(FAIL_ON_NULL_FOR_PRIMITIVES, true);
+
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(JacksonConverterFactory.create());
+                .addConverterFactory(JacksonConverterFactory.create(defaultMapper));
     }
 
     private OkHttpClient getDefaultHttpClient() {

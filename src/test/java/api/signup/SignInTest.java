@@ -5,13 +5,15 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
+import org.realworld.utils.ModelValidator;
 import org.realworld.utils.ResponseUtils;
 import org.realworld.utils.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Collections;
 
 public class SignInTest {
 
@@ -27,16 +29,23 @@ public class SignInTest {
         String userEmail = "qa2@gmail.com";
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, "12345"));
         ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.loginUser(userForSignIn));
-        assertEquals(parsedResponse.getStatusCode(), 200);
-        assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
+
+        SoftAssert sAssert = new SoftAssert();
+        sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
+        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertAll();
     }
 
     @Test(dataProvider = "negativeCases")
     public void loginNegativeCases(String userEmail, String userPassword, String expectedErrorMessage) {
         LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, userPassword));
         ResponseWrapper<String> parsedErrorResponse = ResponseUtils.executeAndParseError(apiService.loginUser(userForSignIn));
-        assertEquals(parsedErrorResponse.getStatusCode(), 422);
-        assertEquals(parsedErrorResponse.getResponseBody(), expectedErrorMessage);
+
+        SoftAssert sAssert = new SoftAssert();
+        sAssert.assertEquals(parsedErrorResponse.getStatusCode(), 422);
+        sAssert.assertEquals(parsedErrorResponse.getResponseBody(), expectedErrorMessage);
+        sAssert.assertAll();
     }
 
     @DataProvider(name = "negativeCases")
