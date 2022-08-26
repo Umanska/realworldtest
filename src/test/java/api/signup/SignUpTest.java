@@ -6,12 +6,15 @@ import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
+import org.realworld.utils.ModelValidatorUtils;
 import org.realworld.utils.ResponseUtils;
-import org.realworld.utils.RetrofitFactory;
+import org.realworld.services.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import java.util.Collections;
 
 import static org.realworld.api.Constants.*;
 
@@ -32,10 +35,12 @@ public class SignUpTest {
         newValidUser = new NewUserRequest(
                 generateNewUser(userName, userName + EMAIL_SUFFIX, PASSWORD));
         ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.signUpUser(newValidUser));
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         softAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), newValidUser.getUser().getUsername());
         softAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), newValidUser.getUser().getEmail());
+        softAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         softAssert.assertAll();
     }
 
@@ -44,6 +49,7 @@ public class SignUpTest {
     public void signUpUserWithEmptyRequiredField(String username, String email, String password, String errorMessage) {
         NewUserRequest userRequest = new NewUserRequest(generateNewUser(username, email, password));
         ResponseWrapper<String> parsedResponse = ResponseUtils.executeAndParseError(apiService.signUpUser(userRequest));
+
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(parsedResponse.getStatusCode(), 422);
         softAssert.assertEquals(parsedResponse.getResponseBody(), errorMessage);

@@ -1,6 +1,5 @@
 package api.update;
 
-import org.apache.commons.lang3.StringUtils;
 import org.realworld.api.Session;
 import org.realworld.api.datamodel.requests.UpdateUser;
 import org.realworld.api.datamodel.requests.UpdateUserRequest;
@@ -8,12 +7,15 @@ import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
 import org.realworld.services.AuthenticationService;
+import org.realworld.utils.ModelValidatorUtils;
 import org.realworld.utils.ResponseUtils;
-import org.realworld.utils.RetrofitFactory;
+import org.realworld.services.RetrofitFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import java.util.Collections;
 
 import static org.realworld.api.Constants.EMAIL_SUFFIX;
 import static org.realworld.api.Constants.USER_NAME_PREFIX;
@@ -41,6 +43,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), updatedEmail);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -55,6 +58,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -69,6 +73,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getImage(), updatedImage);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -83,12 +88,12 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getBio(), updatedBio);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
     @Test
     public void updateUsernameFieldTwice() {
-        //TODO add json schema assert
         String updatedUsername = USER_NAME_PREFIX + System.nanoTime() + System.currentTimeMillis();
         UpdateUser updateUser = new UpdateUser.Builder()
                 .username(updatedUsername)
@@ -102,6 +107,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -125,9 +131,7 @@ public class UpdateUserPositiveTest {
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), updatedUsername + EMAIL_SUFFIX);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getImage(), updatedImage);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getBio(), updatedBio);
-        sAssert.assertTrue(parsedResponse.getResponseBody().getUser().getToken() != null ||
-                !StringUtils.equals(parsedResponse.getResponseBody().getUser().getToken(), ""),
-                "Token can not be null or empty");
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
