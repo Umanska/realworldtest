@@ -1,10 +1,10 @@
 package org.realworld.api;
 
-import org.realworld.utils.PropertiesManager;
+import org.realworld.utils.PropertiesManagerUtils;
 
 public final class Constants {
 
-    public static final String PASSWORD = PropertiesManager.getProperty("password");
+    public static final String PASSWORD = PropertiesManagerUtils.getProperty("password");
     public static final String USER_NAME_PREFIX = "qatestapi";
     public static final String EMAIL_SUFFIX = "@gmail.com";
     public static final String USER_1_EMAIL = "qatestapi000@gmail.com";

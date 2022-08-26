@@ -7,10 +7,10 @@ import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator
 
 import java.util.Set;
 
-public class ModelValidator {
+public class ModelValidatorUtils {
 
 
-    public <T> Set<ConstraintViolation<T>> isValid(T toValidate) {
+    public static <T> Set<ConstraintViolation<T>> validate(T toValidate) {
         ValidatorFactory factory = Validation.byDefaultProvider()
                 .configure()
                 .messageInterpolator(new ParameterMessageInterpolator())

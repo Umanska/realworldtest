@@ -7,9 +7,9 @@ import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
 import org.realworld.services.AuthenticationService;
-import org.realworld.utils.ModelValidator;
+import org.realworld.utils.ModelValidatorUtils;
 import org.realworld.utils.ResponseUtils;
-import org.realworld.utils.RetrofitFactory;
+import org.realworld.services.RetrofitFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -43,7 +43,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), updatedEmail);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -58,7 +58,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -73,7 +73,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getImage(), updatedImage);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -88,7 +88,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getBio(), updatedBio);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -107,7 +107,7 @@ public class UpdateUserPositiveTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getUsername(), updatedUsername);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 
@@ -131,7 +131,7 @@ public class UpdateUserPositiveTest {
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), updatedUsername + EMAIL_SUFFIX);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getImage(), updatedImage);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getBio(), updatedBio);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 

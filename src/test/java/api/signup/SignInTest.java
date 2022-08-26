@@ -5,9 +5,9 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ModelValidator;
+import org.realworld.utils.ModelValidatorUtils;
 import org.realworld.utils.ResponseUtils;
-import org.realworld.utils.RetrofitFactory;
+import org.realworld.services.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ public class SignInTest {
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
         sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
-        sAssert.assertEquals(new ModelValidator().isValid(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
+        sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
 

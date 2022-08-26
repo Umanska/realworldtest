@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertiesManager {
+public class PropertiesManagerUtils {
 
     private static final String propertiesFileName = "env.properties";
 

@@ -1,8 +1,10 @@
-package org.realworld.utils;
+package org.realworld.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.realworld.interceptors.HttpCustomLoggingInterceptor;
+import org.realworld.utils.PropertiesManagerUtils;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -12,7 +14,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 public class RetrofitFactory {
 
-    private static final String BASE_URL = PropertiesManager.getProperty("apiBaseUrl");
+    private static final String BASE_URL = PropertiesManagerUtils.getProperty("apiBaseUrl");
     private static final HttpCustomLoggingInterceptor httpLoggingInterceptor =
             new HttpCustomLoggingInterceptor();
     private static RetrofitFactory instance;
