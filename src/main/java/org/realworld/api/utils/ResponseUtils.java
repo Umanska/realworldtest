@@ -1,4 +1,4 @@
-package org.realworld.utils;
+package org.realworld.api.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

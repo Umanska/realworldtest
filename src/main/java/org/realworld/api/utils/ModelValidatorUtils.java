@@ -1,4 +1,4 @@
-package org.realworld.utils;
+package org.realworld.api.utils;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

@@ -1,4 +1,4 @@
-package org.realworld.services;
+package org.realworld.api.services;
 
 import org.realworld.api.Session;
 import org.realworld.api.datamodel.requests.LoginUser;
@@ -6,8 +6,7 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.requests.NewUser;
 import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.UserResponse;
-import org.realworld.api.services.ApiService;
-import org.realworld.utils.ResponseUtils;
+import org.realworld.api.utils.ResponseUtils;
 import retrofit2.Response;
 
 import static org.realworld.api.Constants.PASSWORD;

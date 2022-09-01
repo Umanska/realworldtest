@@ -1,20 +1,19 @@
-package org.realworld.services;
+package org.realworld.api.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.realworld.interceptors.HttpCustomLoggingInterceptor;
-import org.realworld.utils.PropertiesManagerUtils;
+import org.realworld.api.interceptors.HttpCustomLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import static com.fasterxml.jackson.core.JsonParser.Feature.STRICT_DUPLICATE_DETECTION;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static org.realworld.api.Constants.API_BASE_URL;
 
 public class RetrofitFactory {
 
-    private static final String BASE_URL = PropertiesManagerUtils.getProperty("apiBaseUrl");
     private static final HttpCustomLoggingInterceptor httpLoggingInterceptor =
             new HttpCustomLoggingInterceptor();
     private static RetrofitFactory instance;
@@ -50,12 +49,12 @@ public class RetrofitFactory {
 
     private Retrofit.Builder getRetrofitDefaultBuilder() {
         ObjectMapper defaultMapper = new ObjectMapper()
-                .configure(STRICT_DUPLICATE_DETECTION,true)
-                .configure(FAIL_ON_UNKNOWN_PROPERTIES,true)
+                .configure(STRICT_DUPLICATE_DETECTION, true)
+                .configure(FAIL_ON_UNKNOWN_PROPERTIES, true)
                 .configure(FAIL_ON_NULL_FOR_PRIMITIVES, true);
 
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(API_BASE_URL)
                 .addConverterFactory(JacksonConverterFactory.create(defaultMapper));
     }
 

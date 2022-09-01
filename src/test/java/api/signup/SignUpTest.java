@@ -6,9 +6,9 @@ import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.utils.ModelValidatorUtils;
-import org.realworld.utils.ResponseUtils;
-import org.realworld.services.RetrofitFactory;
+import org.realworld.api.utils.ModelValidatorUtils;
+import org.realworld.api.utils.ResponseUtils;
+import org.realworld.api.services.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -65,7 +65,7 @@ public class SignUpTest {
     }
 
     private String getUniqueUserName() {
-        return USER_NAME_PREFIX + System.currentTimeMillis();
+        return USER_NAME_PREFIX_API + System.currentTimeMillis();
     }
 
     @DataProvider(name = "emptyFieldCases")
