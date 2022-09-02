@@ -45,7 +45,7 @@ public class SignUpTest {
     }
 
 
-    @Test(dataProvider = "emptyFieldCases", dependsOnMethods = "signUpUserWithValidData")
+    @Test(dataProvider = "negativeCases", dependsOnMethods = "signUpUserWithValidData")
     public void signUpUserWithEmptyRequiredField(String username, String email, String password, String errorMessage) {
         NewUserRequest userRequest = new NewUserRequest(generateNewUser(username, email, password));
         ResponseWrapper<String> parsedResponse = ResponseUtils.executeAndParseError(apiService.signUpUser(userRequest));
@@ -68,7 +68,7 @@ public class SignUpTest {
         return USER_NAME_PREFIX_API + System.currentTimeMillis();
     }
 
-    @DataProvider(name = "emptyFieldCases")
+    @DataProvider(name = "negativeCases")
     public Object[][] createData() {
         return new Object[][]{
                 {getUniqueUserName(), getUniqueUserName() + EMAIL_SUFFIX, "", "Password must be specified."},

@@ -6,6 +6,7 @@ import org.realworld.ui.utils.SeleniumUtils;
 
 public class SignUpPage {
 
+    private final String emailField = "//input [@type='email' and contains(@placeholder, 'Email')]";
     protected WebDriver webDriver;
 
     public SignUpPage(WebDriver webDriver) {
@@ -13,6 +14,10 @@ public class SignUpPage {
 
         String signUpHeader = "//h1[contains(text(),'Sign up')]";
         SeleniumUtils.getElementWithWait(webDriver, signUpHeader);
+    }
+
+    public boolean isSignUpPage(){
+        return webDriver.getCurrentUrl().endsWith("/register");
     }
 
     public WebDriver signUp(String username, String email, String password) {
@@ -23,9 +28,13 @@ public class SignUpPage {
         return webDriver;
     }
 
+    public WebElement getEmailField(){
+        return SeleniumUtils.getElementWithWait(webDriver, emailField);
+    }
+
     public SignUpPage fillInEmail(String email) {
-        String emailField = "//input [@type='email' and contains(@placeholder, 'Email')]";
         WebElement email_field = SeleniumUtils.getElementWithWait(webDriver, emailField);
+        email_field.clear();
         email_field.sendKeys(email);
         return this;
     }
@@ -33,6 +42,7 @@ public class SignUpPage {
     public SignUpPage fillInUsername(String username) {
         String userNameField = "//input [contains(@placeholder, 'Username')]";
         WebElement username_field = SeleniumUtils.getElementWithWait(webDriver, userNameField);
+        username_field.clear();
         username_field.sendKeys(username);
         return this;
     }
@@ -40,6 +50,7 @@ public class SignUpPage {
     public SignUpPage fillInPassword(String password) {
         String passwordField = "//input [contains(@placeholder, 'Password')]";
         WebElement password_field = SeleniumUtils.getElementWithWait(webDriver, passwordField);
+        password_field.clear();
         password_field.sendKeys(password);
         return this;
     }
