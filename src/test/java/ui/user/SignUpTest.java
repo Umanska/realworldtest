@@ -23,7 +23,7 @@ public class SignUpTest extends UITestBase {
         List<WebElement> menuItems = homePage.itemsLoggedInNavMenu();
 
         SoftAssert sAssert = new SoftAssert();
-        sAssert.assertTrue(SeleniumUtils.getElementWithText(menuItems, userName) != null,
+        sAssert.assertNotNull(SeleniumUtils.getElementByText(menuItems, userName),
                 userName + " tab is missing in nav menu");
         sAssert.assertTrue(SeleniumUtils.isActive(homePage.homePageTabFromNavMenu()));
         sAssert.assertTrue(SeleniumUtils.isActive(homePage.yourFeedTab()));
@@ -34,10 +34,10 @@ public class SignUpTest extends UITestBase {
     public void signUpUserEmptyRequiredFields(String username, String email, String password, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, password);
-
+        String elementXpath = "//li[normalize-space(text())=\"" + errorMessage + "\"]";
         SoftAssert sAssert = new SoftAssert();
-        sAssert.assertTrue(SeleniumUtils.getElementWithWait(this.getDriver(),
-                "//li[normalize-space(text())=\"" + errorMessage + "\"]") != null);
+        sAssert.assertTrue(SeleniumUtils.isPresent(this.getDriver(), elementXpath),
+                "Element by elementXpath:" + elementXpath + "is missing");
         sAssert.assertTrue(signUpPage.isSignUpPage());
         sAssert.assertAll();
     }
@@ -58,10 +58,11 @@ public class SignUpTest extends UITestBase {
     public void signUpWithExistedEmailUsername(String username, String email, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, PASSWORD);
+        String elementXpath = "//li[normalize-space(text())='" + errorMessage + "']";
 
         SoftAssert sAssert = new SoftAssert();
-        sAssert.assertTrue(SeleniumUtils.getElementWithWait(this.getDriver(),
-                "//li[normalize-space(text())='" + errorMessage + "']") != null);
+        sAssert.assertTrue(SeleniumUtils.isPresent(this.getDriver(), elementXpath),
+                "Element by elementXpath:" + elementXpath + "is missing");
         sAssert.assertTrue(signUpPage.isSignUpPage());
         sAssert.assertAll();
     }

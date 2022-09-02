@@ -12,7 +12,7 @@ import java.util.List;
 public class SeleniumUtils {
 
     public static WebElement getElementWithWait(WebDriver driver, String xpath) {
-        return new WebDriverWait(driver, Duration.ofSeconds(15))
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
     }
 
@@ -20,7 +20,12 @@ public class SeleniumUtils {
         return element.getAttribute("class").contains("active");
     }
 
-    public static WebElement getElementWithText(List<WebElement> webElements, String text) {
+    public static Boolean isPresent(WebDriver driver, String xpath) {
+        WebElement element = getElementWithWait(driver, xpath);
+        return element != null;
+    }
+
+    public static WebElement getElementByText(List<WebElement> webElements, String text) {
         for (WebElement element : webElements) {
             if (element.getText().contains(text)) {
                 return element;
