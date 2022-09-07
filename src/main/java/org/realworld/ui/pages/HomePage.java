@@ -9,6 +9,7 @@ import java.util.List;
 
 public class HomePage {
 
+    public final static String URL_PATH = "/#";
     private WebDriver webDriver;
 
     public HomePage(WebDriver webDriver) {

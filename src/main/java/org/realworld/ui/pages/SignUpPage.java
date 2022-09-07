@@ -6,7 +6,11 @@ import org.realworld.ui.utils.SeleniumUtils;
 
 public class SignUpPage {
 
-    private final String emailField = "//input [@type='email' and contains(@placeholder, 'Email')]";
+    public final String EMAIL_FIELD = "//input [@type='email' and contains(@placeholder, 'Email')]";
+    public final String USERNAME_FIELD = "//input [contains(@placeholder, 'Username')]";
+    public final String PASSWORD_FIELD = "//input [contains(@placeholder, 'Password')]";
+    public final String SIGNUP_BUTTON = "//button [@type='submit' and contains(text(), 'Sign up')]";
+    public final static String URL_PATH = "/#/register";
     protected WebDriver webDriver;
 
     public SignUpPage(WebDriver webDriver) {
@@ -14,10 +18,6 @@ public class SignUpPage {
 
         String signUpHeader = "//h1[contains(text(),'Sign up')]";
         SeleniumUtils.getElementWithWait(webDriver, signUpHeader);
-    }
-
-    public boolean isSignUpPage(){
-        return webDriver.getCurrentUrl().endsWith("/register");
     }
 
     public WebDriver signUp(String username, String email, String password) {
@@ -28,36 +28,33 @@ public class SignUpPage {
         return webDriver;
     }
 
-    public WebElement getEmailField(){
-        return SeleniumUtils.getElementWithWait(webDriver, emailField);
+    public WebElement getEmailField() {
+        return SeleniumUtils.getElementWithWait(webDriver, EMAIL_FIELD);
     }
 
     public SignUpPage fillInEmail(String email) {
-        WebElement email_field = SeleniumUtils.getElementWithWait(webDriver, emailField);
+        WebElement email_field = SeleniumUtils.getElementWithWait(webDriver, EMAIL_FIELD);
         email_field.clear();
         email_field.sendKeys(email);
         return this;
     }
 
     public SignUpPage fillInUsername(String username) {
-        String userNameField = "//input [contains(@placeholder, 'Username')]";
-        WebElement username_field = SeleniumUtils.getElementWithWait(webDriver, userNameField);
+        WebElement username_field = SeleniumUtils.getElementWithWait(webDriver, USERNAME_FIELD);
         username_field.clear();
         username_field.sendKeys(username);
         return this;
     }
 
     public SignUpPage fillInPassword(String password) {
-        String passwordField = "//input [contains(@placeholder, 'Password')]";
-        WebElement password_field = SeleniumUtils.getElementWithWait(webDriver, passwordField);
+        WebElement password_field = SeleniumUtils.getElementWithWait(webDriver, PASSWORD_FIELD);
         password_field.clear();
         password_field.sendKeys(password);
         return this;
     }
 
     public void clickSignUp() {
-        String signUpButton = "//button [@type='submit' and contains(text(), 'Sign up')]";
-        WebElement signUp = SeleniumUtils.getElementWithWait(webDriver, signUpButton);
+        WebElement signUp = SeleniumUtils.getElementWithWait(webDriver, SIGNUP_BUTTON);
         signUp.click();
     }
 }

@@ -20,11 +20,6 @@ public class SeleniumUtils {
         return element.getAttribute("class").contains("active");
     }
 
-    public static Boolean isPresent(WebDriver driver, String xpath) {
-        WebElement element = getElementWithWait(driver, xpath);
-        return element != null;
-    }
-
     public static WebElement getElementByText(List<WebElement> webElements, String text) {
         for (WebElement element : webElements) {
             if (element.getText().contains(text)) {

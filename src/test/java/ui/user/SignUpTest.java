@@ -8,6 +8,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import ui.base.UITestBase;
+import ui.asserts.WebSoftAssert;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class SignUpTest extends UITestBase {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, password);
         String elementXpath = "//li[normalize-space(text())=\"" + errorMessage + "\"]";
-        SoftAssert sAssert = new SoftAssert();
-        sAssert.assertTrue(SeleniumUtils.isPresent(this.getDriver(), elementXpath),
-                "Element by elementXpath:" + elementXpath + "is missing");
-        sAssert.assertTrue(signUpPage.isSignUpPage());
+
+        WebSoftAssert sAssert = new WebSoftAssert(getDriver());
+        sAssert.assertElementExist(elementXpath);
+        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
@@ -48,9 +49,9 @@ public class SignUpTest extends UITestBase {
         signUpPage.signUp(getUniqueUserName(), email, PASSWORD);
         String msg = signUpPage.getEmailField().getAttribute("validationMessage");
 
-        SoftAssert sAssert = new SoftAssert();
+        WebSoftAssert sAssert = new WebSoftAssert(getDriver());
         sAssert.assertEquals(msg, errorMessage);
-        sAssert.assertTrue(signUpPage.isSignUpPage());
+        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
@@ -60,17 +61,16 @@ public class SignUpTest extends UITestBase {
         signUpPage.signUp(username, email, PASSWORD);
         String elementXpath = "//li[normalize-space(text())='" + errorMessage + "']";
 
-        SoftAssert sAssert = new SoftAssert();
-        sAssert.assertTrue(SeleniumUtils.isPresent(this.getDriver(), elementXpath),
-                "Element by elementXpath:" + elementXpath + "is missing");
-        sAssert.assertTrue(signUpPage.isSignUpPage());
+        WebSoftAssert sAssert = new WebSoftAssert(getDriver());
+        sAssert.assertElementExist(elementXpath);
+        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
     private SignUpPage loadSignUpPage() {
-        HomePage homePage = new HomePage(this.getDriver());
+        HomePage homePage = new HomePage(getDriver());
         homePage.signUpTabFromNavMenu().click();
-        return new SignUpPage(this.getDriver());
+        return new SignUpPage(getDriver());
     }
 
     private String getUniqueUserName() {
