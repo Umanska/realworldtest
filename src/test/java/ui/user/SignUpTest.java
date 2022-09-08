@@ -39,7 +39,7 @@ public class SignUpTest extends UITestBase {
 
         WebSoftAssert sAssert = new WebSoftAssert(getDriver());
         sAssert.assertElementExist(elementXpath);
-        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
+        sAssert.assertCurrentUrl(SignUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
@@ -51,7 +51,7 @@ public class SignUpTest extends UITestBase {
 
         WebSoftAssert sAssert = new WebSoftAssert(getDriver());
         sAssert.assertEquals(msg, errorMessage);
-        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
+        sAssert.assertCurrentUrl(SignUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
@@ -63,7 +63,7 @@ public class SignUpTest extends UITestBase {
 
         WebSoftAssert sAssert = new WebSoftAssert(getDriver());
         sAssert.assertElementExist(elementXpath);
-        sAssert.assertCurrentUrl(signUpPage.URL_PATH);
+        sAssert.assertCurrentUrl(SignUpPage.URL_PATH);
         sAssert.assertAll();
     }
 
