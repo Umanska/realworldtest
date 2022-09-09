@@ -5,15 +5,18 @@ import org.realworld.api.datamodel.requests.LoginUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
+import org.realworld.api.services.RetrofitFactory;
 import org.realworld.api.utils.ModelValidatorUtils;
 import org.realworld.api.utils.ResponseUtils;
-import org.realworld.api.services.RetrofitFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 import java.util.Collections;
+
+import static org.realworld.api.Constants.PASSWORD;
+import static org.realworld.api.Constants.USERNAME_OF_EXISTED_USER;
 
 public class SignInTest {
 
@@ -26,13 +29,12 @@ public class SignInTest {
 
     @Test
     public void loginWithValidEmailPassword() {
-        String userEmail = "qa2@gmail.com";
-        LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(userEmail, "12345"));
+        LoginUserRequest userForSignIn = new LoginUserRequest(new LoginUser(USERNAME_OF_EXISTED_USER, PASSWORD));
         ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.loginUser(userForSignIn));
 
         SoftAssert sAssert = new SoftAssert();
         sAssert.assertEquals(parsedResponse.getStatusCode(), 200);
-        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), userEmail);
+        sAssert.assertEquals(parsedResponse.getResponseBody().getUser().getEmail(), USERNAME_OF_EXISTED_USER);
         sAssert.assertEquals(ModelValidatorUtils.validate(parsedResponse.getResponseBody().getUser()), Collections.EMPTY_SET);
         sAssert.assertAll();
     }
@@ -50,11 +52,13 @@ public class SignInTest {
 
     @DataProvider(name = "negativeCases")
     public Object[][] createData() {
+        String emptyField = "";
+        String usernameSpecialChars = "qa00&^%&50@gmail.com";
         return new Object[][]{
-                {"qa00&^%&50@gmail.com", "12345", "Email not found: [qa00&^%&50@gmail.com]"},
-                {"", "12345", "Email must be specified."},
-                {"qa2@gmail.com", "", "Password must be specified."},
-                {"qa2@gmail.com", "12346", "Wrong password."},
+                {usernameSpecialChars, PASSWORD, "Email not found: [" + usernameSpecialChars + "]"},
+                {emptyField, PASSWORD, "Email must be specified."},
+                {USERNAME_OF_EXISTED_USER, emptyField, "Password must be specified."},
+                {USERNAME_OF_EXISTED_USER, "12346", "Wrong password."},
         };
     }
 }

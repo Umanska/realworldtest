@@ -1,14 +1,14 @@
 package api.signup;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.realworld.api.datamodel.requests.NewUser;
 import org.realworld.api.datamodel.requests.NewUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
+import org.realworld.api.services.RetrofitFactory;
 import org.realworld.api.utils.ModelValidatorUtils;
 import org.realworld.api.utils.ResponseUtils;
-import org.realworld.api.services.RetrofitFactory;
+import org.realworld.utils.StringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -21,7 +21,6 @@ import static org.realworld.api.Constants.*;
 public class SignUpTest {
 
     private ApiService apiService;
-
     private NewUserRequest newValidUser;
 
     @BeforeClass
@@ -31,7 +30,7 @@ public class SignUpTest {
 
     @Test
     public void signUpUserWithValidData() {
-        String userName = getUniqueUserName();
+        String userName = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         newValidUser = new NewUserRequest(
                 generateNewUser(userName, userName + EMAIL_SUFFIX, PASSWORD));
         ResponseWrapper<UserResponse> parsedResponse = ResponseUtils.executeAndParse(apiService.signUpUser(newValidUser));
@@ -64,19 +63,17 @@ public class SignUpTest {
                 .build();
     }
 
-    private String getUniqueUserName() {
-        return USER_NAME_PREFIX_API + System.currentTimeMillis();
-    }
-
     @DataProvider(name = "negativeCases")
     public Object[][] createData() {
+        String emptyField = "";
+        String username = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         return new Object[][]{
-                {getUniqueUserName(), getUniqueUserName() + EMAIL_SUFFIX, "", "Password must be specified."},
-                {"", getUniqueUserName() + EMAIL_SUFFIX, PASSWORD, "Username must be specified."},
-                {getUniqueUserName(), "", PASSWORD, "Email must be specified."},
-                {getUniqueUserName(), newValidUser.getUser().getEmail(), PASSWORD, "Email already taken: [" + newValidUser.getUser().getEmail() + "]"},
-                {newValidUser.getUser().getUsername(), getUniqueUserName() + EMAIL_SUFFIX, PASSWORD, "Username already taken: [" + newValidUser.getUser().getUsername() + "]"},
-                {getUniqueUserName(), RandomStringUtils.randomAlphanumeric(256), PASSWORD, "Email must be less than 256 characters"},
+                {username, username + EMAIL_SUFFIX, emptyField, "Password must be specified."},
+                {emptyField, username + EMAIL_SUFFIX, PASSWORD, "Username must be specified."},
+                {username, emptyField, PASSWORD, "Email must be specified."},
+                {username, newValidUser.getUser().getEmail(), PASSWORD, "Email already taken: [" + newValidUser.getUser().getEmail() + "]"},
+                {newValidUser.getUser().getUsername(), username + EMAIL_SUFFIX, PASSWORD, "Username already taken: [" + newValidUser.getUser().getUsername() + "]"},
+                {username, StringUtils.getRandomString(256), PASSWORD, "Email must be less than 256 characters"},
         };
     }
 }

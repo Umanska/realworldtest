@@ -4,6 +4,7 @@ import org.openqa.selenium.WebElement;
 import org.realworld.ui.pages.HomePage;
 import org.realworld.ui.pages.SignUpPage;
 import org.realworld.ui.utils.SeleniumUtils;
+import org.realworld.utils.StringUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -19,7 +20,7 @@ public class SignUpTest extends UITestBase {
     @Test
     public void signUpUserWithValidData() {
         SignUpPage signUpPage = loadSignUpPage();
-        String userName = USER_NAME_PREFIX_UI + System.nanoTime();
+        String userName = StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI);
         HomePage homePage = new HomePage(signUpPage.signUp(userName, userName + EMAIL_SUFFIX, PASSWORD));
         List<WebElement> menuItems = homePage.itemsLoggedInNavMenu();
 
@@ -44,9 +45,9 @@ public class SignUpTest extends UITestBase {
     }
 
     @Test(dataProvider = "signUpUserInvalidEmail")
-    public void signUpUserInvalidEmail(String email, String errorMessage) {
+    public void signUpUserInvalidEmail(String invalidEmail, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
-        signUpPage.signUp(getUniqueUserName(), email, PASSWORD);
+        signUpPage.signUp(StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI), invalidEmail, PASSWORD);
         String msg = signUpPage.getEmailField().getAttribute("validationMessage");
 
         WebSoftAssert sAssert = new WebSoftAssert(getDriver());
@@ -55,8 +56,8 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
-    @Test(dataProvider = "signUpWithExistedEmailUsername")
-    public void signUpWithExistedEmailUsername(String username, String email, String errorMessage) {
+    @Test(dataProvider = "signUpWithExistedUser")
+    public void signUpWithExistedUser(String username, String email, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, PASSWORD);
         String elementXpath = "//li[normalize-space(text())='" + errorMessage + "']";
@@ -73,34 +74,32 @@ public class SignUpTest extends UITestBase {
         return new SignUpPage(getDriver());
     }
 
-    private String getUniqueUserName() {
-        return USER_NAME_PREFIX_UI + System.currentTimeMillis();
-    }
-
     @DataProvider(name = "signUpUserEmptyRequiredFields")
     public Object[][] createUserDataWithEmptyField() {
+        String emptyField = "";
+        String username = StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI);
         return new Object[][]{
-                {getUniqueUserName(), "", PASSWORD, "email can't be blank"},
-                {"", getUniqueUserName() + EMAIL_SUFFIX, PASSWORD, "username can't be blank"},
-                {getUniqueUserName(), getUniqueUserName() + EMAIL_SUFFIX, "", "password can't be blank"},
+                {username, emptyField, PASSWORD, "email can't be blank"},
+                {emptyField, username + EMAIL_SUFFIX, PASSWORD, "username can't be blank"},
+                {username, username + EMAIL_SUFFIX, emptyField, "password can't be blank"},
         };
     }
 
     @DataProvider(name = "signUpUserInvalidEmail")
     public Object[][] createInvalidEmailField() {
-        String username = getUniqueUserName();
+        String username = StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI);
         return new Object[][]{
                 {username, "Please include an '@' in the email address. '" + username + "' is missing an '@'."},
                 {username + "@", "Please enter a part following '@'. '" + username + "@' is incomplete."},
         };
     }
 
-    @DataProvider(name = "signUpWithExistedEmailUsername")
+    @DataProvider(name = "signUpWithExistedUser")
     public Object[][] createData() {
-        String usernameOfExistedUser = "qa123";
+        String uniqueUsername = StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI);
         return new Object[][]{
-                {usernameOfExistedUser, getUniqueUserName() + EMAIL_SUFFIX, "username has already been taken"},
-                {getUniqueUserName(), usernameOfExistedUser + EMAIL_SUFFIX, "email has already been taken"},
+                {USERNAME_OF_EXISTED_USER, uniqueUsername + EMAIL_SUFFIX, "username has already been taken"},
+                {uniqueUsername, USERNAME_OF_EXISTED_USER + EMAIL_SUFFIX, "email has already been taken"},
         };
     }
 }

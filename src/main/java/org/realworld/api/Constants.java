@@ -12,4 +12,5 @@ public final class Constants {
     public static final String EMAIL_SUFFIX = "@gmail.com";
     public static final String USER_1_EMAIL = "qatestapi000@gmail.com";
     public static final String USER_2_EMAIL = "qatestapi111@gmail.com";
+    public static final String USERNAME_OF_EXISTED_USER = "qa123";
 }
