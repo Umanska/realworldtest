@@ -13,7 +13,6 @@ import static org.realworld.api.Constants.UI_BASE_URL;
 
 public class UITestBase {
 
-    private WebDriver driver;
     private static ThreadLocal<WebDriver> dr = new ThreadLocal<>();
     private WebDriverManager wdm;
 
@@ -27,18 +26,17 @@ public class UITestBase {
 
     @BeforeMethod
     protected void setup() {
-        driver = wdm.create();
-        setDriver(driver);
-        driver.navigate().to(UI_BASE_URL);
-        driver.manage().window().fullscreen();
+        dr.set(wdm.create());
+        getDriver().navigate().to(UI_BASE_URL);
+        getDriver().manage().window().fullscreen();
         System.out.println("Created driver..");
     }
 
     @AfterMethod
     protected void teardown() {
-        if (driver != null) {
+        if (getDriver() != null) {
             wdm.quit(getDriver());
-            unload();
+            dr.remove();
         }
         System.out.println("Quited driver..");
     }
@@ -51,13 +49,5 @@ public class UITestBase {
 
     protected WebDriver getDriver() {
         return dr.get();
-    }
-
-    protected void setDriver(WebDriver driverRef) {
-        dr.set(driverRef);
-    }
-
-    protected void unload() {
-        dr.remove();
     }
 }
