@@ -10,57 +10,59 @@ import java.util.List;
 public class HomePage {
 
     public final static String URL_PATH = "/#";
+    public static final String YOUR_FEED_TAB = "//a[normalize-space(text())=\"Your Feed\"]";
+    public static final String GLOBAL_FEED_TAB = "//a[normalize-space(text())=\"Global Feed\"]";
+    public static final String HOME_HEADER_BANNER = "//h1 [normalize-space(text())=\"conduit\"]";
+    public static final String HOME_MESSAGE_BANNER = "//p [normalize-space(text())=\"A place to share your knowledge.\"]";
+    public static final String HOME_OPTION_NAV_MENU = "//a[normalize-space(text())=\"Home\")]";
+    public static final String SIGN_UP_OPTION_NAV_MENU = "//a[normalize-space(text())=\"Sign up\")]";
+    public static final String SIGN_IN_OPTION_NAV_MENU = "//a[normalize-space(text())=\"Sign in\")]";
+    public static final String NAV_MENU_LOGGED_OUT = "//ul [contains(@class, 'navbar-nav') and @show-authed='false']";
+    public static final String OPTIONS_NAV_MENU_LOGGED_IN = "//ul [@show-authed='true']/li/a";
+    public static final String HOME_PAGE_IDENTIFIER = "//div [contains(@class, 'home-page')]";
+    public static final String USER_PROFILE_IMG = "//li/a/img [@class='user-pic']";
+
     private WebDriver webDriver;
 
     public HomePage(WebDriver webDriver) {
         this.webDriver = webDriver;
-
-        String homePageIdentifier = "//div [contains(@class, 'home-page')]";
-        SeleniumUtils.getElementWithWait(webDriver, homePageIdentifier);
+        SeleniumUtils.getElementWithWait(webDriver, HOME_PAGE_IDENTIFIER);
     }
 
     public WebElement bannerHeader() {
-        String bannerHeader = "//h1 [text(),'conduit']";
-        return SeleniumUtils.getElementWithWait(webDriver, bannerHeader);
+        return SeleniumUtils.getElementWithWait(webDriver, HOME_HEADER_BANNER);
     }
 
     public WebElement bannerMessage() {
-        String bannerMessage = "//p [text(),'A place to share your knowledge.']";
-        return SeleniumUtils.getElementWithWait(webDriver, bannerMessage);
+        return SeleniumUtils.getElementWithWait(webDriver, HOME_MESSAGE_BANNER);
     }
 
     public WebElement yourFeedTab() {
-        String yourFeedTab = "//a [contains(text(),'Your Feed')]";
-        return SeleniumUtils.getElementWithWait(webDriver, yourFeedTab);
+        return SeleniumUtils.getElementWithWait(webDriver, YOUR_FEED_TAB);
     }
 
     public WebElement globalFeedTab() {
-        String yourFeedTab = "//a [contains(text(),'Global Feed')]";
-        return SeleniumUtils.getElementWithWait(webDriver, yourFeedTab);
+        return SeleniumUtils.getElementWithWait(webDriver, GLOBAL_FEED_TAB);
     }
 
     public List<WebElement> itemsLoggedInNavMenu() {
-        SeleniumUtils.getElementWithWait(webDriver, "//li/a/img [@class='user-pic']");
-        return webDriver.findElements(By.xpath("//ul [@show-authed='true']/li/a"));
+        SeleniumUtils.getElementWithWait(webDriver, USER_PROFILE_IMG);
+        return webDriver.findElements(By.xpath(OPTIONS_NAV_MENU_LOGGED_IN));
     }
 
     public WebElement navigationMenuLoggedIn() {
-        String navigationMenu = "//ul [contains(@class, 'navbar-nav') and @show-authed='false']";
-        return SeleniumUtils.getElementWithWait(webDriver, navigationMenu);
+        return SeleniumUtils.getElementWithWait(webDriver, NAV_MENU_LOGGED_OUT);
     }
 
     public WebElement signUpTabFromNavMenu() {
-        String signUpTab = "//a[contains(text(), 'Sign up')]";
-        return SeleniumUtils.getElementWithWait(webDriver, signUpTab);
+        return SeleniumUtils.getElementWithWait(webDriver, SIGN_UP_OPTION_NAV_MENU);
     }
 
     public WebElement signInTabFromNavMenu() {
-        String signInTab = "//a[contains(text(), 'Sign in')]";
-        return SeleniumUtils.getElementWithWait(webDriver, signInTab);
+        return SeleniumUtils.getElementWithWait(webDriver, SIGN_IN_OPTION_NAV_MENU);
     }
 
     public WebElement homePageTabFromNavMenu() {
-        String homeTab = "//a[contains(text(), 'Home')]";
-        return SeleniumUtils.getElementWithWait(webDriver, homeTab);
+        return SeleniumUtils.getElementWithWait(webDriver, HOME_OPTION_NAV_MENU);
     }
 }
