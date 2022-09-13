@@ -6,10 +6,11 @@ import org.realworld.api.datamodel.requests.UpdateUserRequest;
 import org.realworld.api.datamodel.responses.ResponseWrapper;
 import org.realworld.api.datamodel.responses.UserResponse;
 import org.realworld.api.services.ApiService;
-import org.realworld.services.AuthenticationService;
-import org.realworld.utils.ModelValidatorUtils;
-import org.realworld.utils.ResponseUtils;
-import org.realworld.services.RetrofitFactory;
+import org.realworld.api.services.AuthenticationService;
+import org.realworld.api.services.RetrofitFactory;
+import org.realworld.api.utils.ModelValidatorUtils;
+import org.realworld.api.utils.ResponseUtils;
+import org.realworld.utils.StringUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -18,7 +19,7 @@ import org.testng.asserts.SoftAssert;
 import java.util.Collections;
 
 import static org.realworld.api.Constants.EMAIL_SUFFIX;
-import static org.realworld.api.Constants.USER_NAME_PREFIX;
+import static org.realworld.api.Constants.USER_NAME_PREFIX_API;
 
 public class UpdateUserPositiveTest {
 
@@ -26,7 +27,7 @@ public class UpdateUserPositiveTest {
 
     @BeforeMethod(alwaysRun = true)
     public void signIn() {
-        String userName = USER_NAME_PREFIX + System.nanoTime();
+        String userName = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         ApiService apiService = RetrofitFactory.getInstance().createService(ApiService.class);
         Session session = new AuthenticationService(apiService).createSessionWithEmail(userName + EMAIL_SUFFIX);
         authorizedApiService = RetrofitFactory.getInstance().createAuthorizedService(ApiService.class, session.getToken());
@@ -94,7 +95,7 @@ public class UpdateUserPositiveTest {
 
     @Test
     public void updateUsernameFieldTwice() {
-        String updatedUsername = USER_NAME_PREFIX + System.nanoTime() + System.currentTimeMillis();
+        String updatedUsername = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         UpdateUser updateUser = new UpdateUser.Builder()
                 .username(updatedUsername)
                 .build();
@@ -113,7 +114,7 @@ public class UpdateUserPositiveTest {
 
     @Test
     public void updateAllFields() {
-        String updatedUsername = USER_NAME_PREFIX + System.nanoTime() + System.currentTimeMillis();
+        String updatedUsername = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         String updatedImage = "https://test.com";
         String updatedBio = "https://en.wikipedia.org";
         UpdateUser updateUser = new UpdateUser.Builder()
@@ -137,7 +138,7 @@ public class UpdateUserPositiveTest {
 
     @DataProvider(name = "email")
     public Object[][] createEmailData() {
-        String userName = USER_NAME_PREFIX + System.nanoTime();
+        String userName = USER_NAME_PREFIX_API + System.nanoTime();
         return new Object[][]{
                 {userName + System.currentTimeMillis() + EMAIL_SUFFIX},
                 {userName + "-d" + EMAIL_SUFFIX},
@@ -151,7 +152,7 @@ public class UpdateUserPositiveTest {
 
     @DataProvider(name = "username")
     public Object[][] createUsernameData() {
-        String userName = USER_NAME_PREFIX + System.nanoTime();
+        String userName = StringUtils.getUniqueUsername(USER_NAME_PREFIX_API);
         return new Object[][]{
                 {userName + System.currentTimeMillis()},
                 {userName + "\t"},

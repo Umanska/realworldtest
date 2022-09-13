@@ -1,4 +1,4 @@
-package org.realworld.interceptors;
+package org.realworld.api.interceptors;
 
 import okhttp3.Connection;
 import okhttp3.Headers;
