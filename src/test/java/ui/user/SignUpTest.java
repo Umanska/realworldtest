@@ -1,5 +1,6 @@
 package ui.user;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.realworld.ui.pages.HomePage;
 import org.realworld.ui.pages.SignUpPage;
@@ -17,7 +18,7 @@ import static org.realworld.api.Constants.*;
 
 public class SignUpTest extends UITestBase {
 
-    @Test
+    @Test(description = "Sign up user with valid unique username, email and default password")
     public void signUpUserWithValidData() {
         SignUpPage signUpPage = loadSignUpPage();
         String userName = StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI);
@@ -32,7 +33,8 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
-    @Test(dataProvider = "signUpUserEmptyRequiredFields")
+    @Test(dataProvider = "signUpUserEmptyRequiredFields",
+            description = "Sign up with username: [0] and email: [1]; expect errorMessage: [3]")
     public void signUpUserEmptyRequiredFields(String username, String email, String password, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, password);
@@ -44,7 +46,8 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
-    @Test(dataProvider = "signUpUserInvalidEmail")
+    @Test(dataProvider = "signUpUserInvalidEmail",
+            description = "Sign up with invalid email: [0]; expect errorMessage: [1]")
     public void signUpUserInvalidEmail(String invalidEmail, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(StringUtils.getUniqueUsername(USER_NAME_PREFIX_UI), invalidEmail, PASSWORD);
@@ -56,7 +59,9 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
-    @Test(dataProvider = "signUpWithExistedUser")
+    @Test(dataProvider = "signUpWithExistedUser",
+            description = "Sign up with username: [0] and email: [1] which already exist in system;" +
+                    "expect errorMessage: [2]")
     public void signUpWithExistedUser(String username, String email, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, PASSWORD);
@@ -68,6 +73,7 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
+    @Step
     private SignUpPage loadSignUpPage() {
         HomePage homePage = new HomePage(getDriver());
         homePage.signUpTabFromNavMenu().click();
