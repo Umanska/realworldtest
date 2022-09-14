@@ -1,6 +1,7 @@
 package ui.base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.Description;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -18,33 +19,33 @@ public class UITestBase {
 
     @Parameters({"browser"})
     @BeforeSuite
+    @Description("Creating WebDriverManager instance..")
     protected void setupSuite(@Optional String browser) {
         if (browser == null) browser = "chrome";
         wdm = WebDriverManager.getInstance(browser);
-        System.out.println("Created wdm instance..");
     }
 
     @BeforeMethod
+    @Description("Creating driver..")
     protected void setup() {
         dr.set(wdm.create());
         getDriver().navigate().to(UI_BASE_URL);
         getDriver().manage().window().fullscreen();
-        System.out.println("Created driver..");
     }
 
     @AfterMethod
+    @Description("Quiting driver..")
     protected void teardown() {
         if (getDriver() != null) {
             wdm.quit(getDriver());
             dr.remove();
         }
-        System.out.println("Quited driver..");
     }
 
     @AfterSuite
+    @Description("Quiting WebDriverManager instance..")
     protected void teardownSuite() {
         wdm.quit();
-        System.out.println("Quited wdm instance..");
     }
 
     protected WebDriver getDriver() {
