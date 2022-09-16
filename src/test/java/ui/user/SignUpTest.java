@@ -2,19 +2,20 @@ package ui.user;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
+import org.realworld.ui.BaseUIObject;
 import org.realworld.ui.pages.HomePage;
 import org.realworld.ui.pages.SignUpPage;
-import org.realworld.ui.utils.SeleniumUtils;
 import org.realworld.utils.StringUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-import ui.base.UITestBase;
 import ui.asserts.WebSoftAssert;
+import ui.base.UITestBase;
 
 import java.util.List;
 
 import static org.realworld.api.Constants.*;
+import static org.realworld.ui.BaseUIObject.getElementByText;
 
 public class SignUpTest extends UITestBase {
 
@@ -26,15 +27,15 @@ public class SignUpTest extends UITestBase {
         List<WebElement> menuItems = homePage.itemsLoggedInNavMenu();
 
         SoftAssert sAssert = new SoftAssert();
-        sAssert.assertNotNull(SeleniumUtils.getElementByText(menuItems, userName),
+        sAssert.assertNotNull(getElementByText(menuItems, userName),
                 userName + " tab is missing in nav menu");
-        sAssert.assertTrue(SeleniumUtils.isActive(homePage.homePageTabFromNavMenu()));
-        sAssert.assertTrue(SeleniumUtils.isActive(homePage.yourFeedTab()));
+        sAssert.assertTrue(BaseUIObject.isActive(homePage.homePageTabFromNavMenu()));
+        sAssert.assertTrue(BaseUIObject.isActive(homePage.yourFeedTab()));
         sAssert.assertAll();
     }
 
     @Test(dataProvider = "signUpUserEmptyRequiredFields",
-            description = "Sign up with username: [0] and email: [1]; expect errorMessage: [3]")
+            description = "Sign up with one empty required field")
     public void signUpUserEmptyRequiredFields(String username, String email, String password, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, password);
@@ -60,8 +61,7 @@ public class SignUpTest extends UITestBase {
     }
 
     @Test(dataProvider = "signUpWithExistedUser",
-            description = "Sign up with username: [0] and email: [1] which already exist in system;" +
-                    "expect errorMessage: [2]")
+            description = "Sign up with username and email which already exist in system")
     public void signUpWithExistedUser(String username, String email, String errorMessage) {
         SignUpPage signUpPage = loadSignUpPage();
         signUpPage.signUp(username, email, PASSWORD);
@@ -73,7 +73,7 @@ public class SignUpTest extends UITestBase {
         sAssert.assertAll();
     }
 
-    @Step
+    @Step("Load Sign Up page..")
     private SignUpPage loadSignUpPage() {
         HomePage homePage = new HomePage(getDriver());
         homePage.signUpTabFromNavMenu().click();
